@@ -58,8 +58,8 @@ public class AppController {
      * @return 生成结果流
      */
     @GetMapping(value = "/chat/gen/code", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
-    public Flux<ServerSentEvent<String>> chatToGenCode(@RequestParam Long appId,
-                                                       @RequestParam String message,
+    public Flux<ServerSentEvent<String>> chatToGenCode(@RequestParam("appId") Long appId,
+                                                       @RequestParam("message") String message,
                                                        HttpServletRequest request) {
         // 参数校验
         ThrowUtils.throwIf(appId == null || appId <= 0, ErrorCode.PARAMS_ERROR, "应用ID无效");
@@ -178,12 +178,10 @@ public class AppController {
      * @return 应用详情
      */
     @GetMapping("/get/vo")
-    public BaseResponse<AppVO> getAppVOById(long id) {
+    public BaseResponse<AppVO> getAppVOById(@RequestParam("id") long id) {
         ThrowUtils.throwIf(id <= 0, ErrorCode.PARAMS_ERROR);
-        // 查询数据库
         App app = appService.getById(id);
         ThrowUtils.throwIf(app == null, ErrorCode.NOT_FOUND_ERROR);
-        // 获取封装类（包含用户信息）
         return ResultUtils.success(appService.getAppVO(app));
     }
     /**

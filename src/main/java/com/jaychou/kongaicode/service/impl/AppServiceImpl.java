@@ -26,6 +26,7 @@ import com.jaychou.kongaicode.service.AppService;
 import jakarta.annotation.Resource;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 
@@ -48,6 +49,7 @@ import java.util.stream.Collectors;
 public class AppServiceImpl extends ServiceImpl<AppMapper, App> implements AppService {
     @Autowired
     private UserService userService;
+    @Lazy
     @Resource
     private ChatHistoryService chatHistoryService;
     @Override
