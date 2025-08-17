@@ -6,6 +6,7 @@ import com.jaychou.kongaicode.ai.core.saver.CodeFileSaverExecutor;
 import com.jaychou.kongaicode.ai.model.HtmlCodeResult;
 import com.jaychou.kongaicode.ai.model.MultiFileCodeResult;
 import com.jaychou.kongaicode.ai.model.enums.CodeGenTypeEnum;
+import com.jaychou.kongaicode.config.AiCodeGeneratorServiceFactory;
 import com.jaychou.kongaicode.exception.BusinessException;
 import com.jaychou.kongaicode.exception.ErrorCode;
 import jakarta.annotation.Resource;
@@ -23,7 +24,11 @@ import java.io.File;
 public class AiCodeGeneratorFacade {
 
     @Resource
-    private AiCodeGeneratorService aiCodeGeneratorService;
+    private AiCodeGeneratorServiceFactory aiCodeGeneratorServiceFactory;
+
+
+
+
     /**
      * 统一入口：根据类型生成并保存代码（使用 appId）
      *
@@ -35,6 +40,8 @@ public class AiCodeGeneratorFacade {
         if (codeGenTypeEnum == null) {
             throw new BusinessException(ErrorCode.SYSTEM_ERROR, "生成类型为空");
         }
+        // 根据 appId 获取对应的 AI 服务实例
+        AiCodeGeneratorService aiCodeGeneratorService = aiCodeGeneratorServiceFactory.getAiCodeGeneratorService(appId);
         return switch (codeGenTypeEnum) {
             case HTML -> {
                 HtmlCodeResult result = aiCodeGeneratorService.generateHtmlCode(userMessage);
@@ -62,6 +69,8 @@ public class AiCodeGeneratorFacade {
         if (codeGenTypeEnum == null) {
             throw new BusinessException(ErrorCode.SYSTEM_ERROR, "生成类型为空");
         }
+        // 根据 appId 获取对应的 AI 服务实例
+        AiCodeGeneratorService aiCodeGeneratorService = aiCodeGeneratorServiceFactory.getAiCodeGeneratorService(appId);
         return switch (codeGenTypeEnum) {
             case HTML -> {
                 Flux<String> codeStream = aiCodeGeneratorService.generateHtmlCodeStream(userMessage);
