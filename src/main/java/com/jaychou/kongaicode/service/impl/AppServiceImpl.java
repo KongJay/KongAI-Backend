@@ -52,6 +52,8 @@ public class AppServiceImpl extends ServiceImpl<AppMapper, App> implements AppSe
     @Lazy
     @Resource
     private ChatHistoryService chatHistoryService;
+    @Resource
+    private AiCodeGeneratorFacade aiCodeGeneratorFacade;
     @Override
     public AppVO getAppVO(App app) {
         if (app == null) {
@@ -132,7 +134,6 @@ public class AppServiceImpl extends ServiceImpl<AppMapper, App> implements AppSe
         // 5. 通过校验后，添加用户消息到对话历史
         chatHistoryService.addChatMessage(appId, message, ChatHistoryMessageTypeEnum.USER.getValue(), loginUser.getId());
         // 6. 调用 AI 生成代码（流式）
-        AiCodeGeneratorFacade aiCodeGeneratorFacade = new AiCodeGeneratorFacade();
         Flux<String> contentFlux = aiCodeGeneratorFacade.generateAndSaveCodeStream(message, codeGenTypeEnum, appId);
         // 7. 收集AI响应内容并在完成后记录到对话历史
         StringBuilder aiResponseBuilder = new StringBuilder();

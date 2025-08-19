@@ -11,6 +11,7 @@ import dev.langchain4j.model.chat.StreamingChatModel;
 import dev.langchain4j.service.AiServices;
 import jakarta.annotation.Resource;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import java.time.Duration;
@@ -19,7 +20,7 @@ import java.time.Duration;
 @Configuration
 public class AiCodeGeneratorServiceFactory {
 
-    @Resource
+    @Resource(name = "openAiChatModel")
     private ChatModel chatModel;
 
     @Resource
@@ -48,6 +49,7 @@ public class AiCodeGeneratorServiceFactory {
     /**
      * 根据 appId 获取服务（带缓存）
      */
+
     public AiCodeGeneratorService getAiCodeGeneratorService(long appId) {
         return serviceCache.get(appId, this::createAiCodeGeneratorService);
     }
@@ -70,7 +72,13 @@ public class AiCodeGeneratorServiceFactory {
                 .build();
     }
 
-
-
-
+    /**
+     * 创建 AI 代码生成器服务
+     *
+     * @return
+     */
+    @Bean
+    public AiCodeGeneratorService aiCodeGeneratorService() {
+        return getAiCodeGeneratorService(0);
+    }
 }

@@ -13,10 +13,7 @@ import com.jaychou.kongaicode.constant.UserConstant;
 import com.jaychou.kongaicode.exception.BusinessException;
 import com.jaychou.kongaicode.exception.ErrorCode;
 import com.jaychou.kongaicode.exception.ThrowUtils;
-import com.jaychou.kongaicode.model.dto.app.AppAddRequest;
-import com.jaychou.kongaicode.model.dto.app.AppAdminUpdateRequest;
-import com.jaychou.kongaicode.model.dto.app.AppQueryRequest;
-import com.jaychou.kongaicode.model.dto.app.AppUpdateRequest;
+import com.jaychou.kongaicode.model.dto.app.*;
 import com.jaychou.kongaicode.model.entity.User;
 import com.jaychou.kongaicode.model.vo.AppVO;
 import com.jaychou.kongaicode.service.UserService;
@@ -312,70 +309,24 @@ public class AppController {
         // 获取封装类
         return ResultUtils.success(appService.getAppVO(app));
     }
-
     /**
-     * 保存应用。
+     * 应用部署
      *
-     * @param app 应用
-     * @return {@code true} 保存成功，{@code false} 保存失败
+     * @param appDeployRequest 部署请求
+     * @param request          请求
+     * @return 部署 URL
      */
-    @PostMapping("save")
-    public boolean save(@RequestBody App app) {
-        return appService.save(app);
+    @PostMapping("/deploy")
+    public BaseResponse<String> deployApp(@RequestBody AppDeployRequest appDeployRequest, HttpServletRequest request) {
+        ThrowUtils.throwIf(appDeployRequest == null, ErrorCode.PARAMS_ERROR);
+        Long appId = appDeployRequest.getAppId();
+        ThrowUtils.throwIf(appId == null || appId <= 0, ErrorCode.PARAMS_ERROR, "应用 ID 不能为空");
+        // 获取当前登录用户
+        User loginUser = userService.getLoginUser(request);
+        // 调用服务部署应用
+        String deployUrl = appService.deployApp(appId, loginUser);
+        return ResultUtils.success(deployUrl);
     }
 
-    /**
-     * 根据主键删除应用。
-     *
-     * @param id 主键
-     * @return {@code true} 删除成功，{@code false} 删除失败
-     */
-    @DeleteMapping("remove/{id}")
-    public boolean remove(@PathVariable Long id) {
-        return appService.removeById(id);
-    }
-
-    /**
-     * 根据主键更新应用。
-     *
-     * @param app 应用
-     * @return {@code true} 更新成功，{@code false} 更新失败
-     */
-    @PutMapping("update")
-    public boolean update(@RequestBody App app) {
-        return appService.updateById(app);
-    }
-
-    /**
-     * 查询所有应用。
-     *
-     * @return 所有数据
-     */
-    @GetMapping("list")
-    public List<App> list() {
-        return appService.list();
-    }
-
-    /**
-     * 根据主键获取应用。
-     *
-     * @param id 应用主键
-     * @return 应用详情
-     */
-    @GetMapping("getInfo/{id}")
-    public App getInfo(@PathVariable Long id) {
-        return appService.getById(id);
-    }
-
-    /**
-     * 分页查询应用。
-     *
-     * @param page 分页对象
-     * @return 分页对象
-     */
-    @GetMapping("page")
-    public Page<App> page(Page<App> page) {
-        return appService.page(page);
-    }
 
 }
