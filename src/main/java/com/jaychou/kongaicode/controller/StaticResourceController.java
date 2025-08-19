@@ -30,7 +30,7 @@ public class StaticResourceController {
     // 处理GET请求，匹配路径模式：/{deployKey}/**（包含任意子路径）
     @GetMapping("/{deployKey}/**")
     public ResponseEntity<Resource> serveStaticResource(
-            @PathVariable String deployKey,  // 从URL路径中提取deployKey变量
+                                                            @PathVariable("deployKey") String deployKey,  // 从URL路径中提取deployKey变量
             HttpServletRequest request) {    // 注入HTTP请求对象
         try {
             // 获取完整的请求路径（例如：/static/key123/css/style.css）
