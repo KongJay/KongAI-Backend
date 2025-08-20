@@ -2,6 +2,7 @@ package com.jaychou.kongaicode.ai;
 
 import com.jaychou.kongaicode.ai.model.HtmlCodeResult;
 import com.jaychou.kongaicode.ai.model.MultiFileCodeResult;
+import com.jaychou.kongaicode.ai.model.enums.CodeGenTypeEnum;
 import dev.langchain4j.service.MemoryId;
 import dev.langchain4j.service.SystemMessage;
 import dev.langchain4j.service.TokenStream;
@@ -54,6 +55,7 @@ public interface AiCodeGeneratorService {
      */
     @SystemMessage(fromResource = "prompt/codegen-vue-project-system-prompt.txt")
     TokenStream generateVueProjectCodeStream(@MemoryId long appId, @UserMessage String userMessage);
+
 
 }
 

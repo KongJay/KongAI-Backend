@@ -1,5 +1,6 @@
 package com.jaychou.kongaicode.service;
 
+import com.jaychou.kongaicode.model.dto.app.AppAddRequest;
 import com.jaychou.kongaicode.model.dto.app.AppQueryRequest;
 import com.jaychou.kongaicode.model.entity.User;
 import com.jaychou.kongaicode.model.vo.AppVO;
@@ -16,6 +17,8 @@ import java.util.List;
  * @author <a href="https://github.com/KongJay">红模仿</a>
  */
 public interface AppService extends IService<App> {
+
+    Long createApp(AppAddRequest appAddRequest, User loginUser);
 
     AppVO getAppVO(App app);
 
