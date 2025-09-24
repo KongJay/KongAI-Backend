@@ -1,0 +1,854 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>炫光博客 | 探索数字世界</title>
+    <style>
+        /* 基础样式与重置 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        :root {
+            --primary: #6c5ce7;
+            --secondary: #a29bfe;
+            --accent: #fd79a8;
+            --dark: #2d3436;
+            --light: #dfe6e9;
+            --gradient: linear-gradient(135deg, #6c5ce7, #00cec9);
+            --neon-glow: 0 0 10px rgba(108, 92, 231, 0.7),
+                        0 0 20px rgba(108, 92, 231, 0.5),
+                        0 0 30px rgba(108, 92, 231, 0.3);
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: var(--light);
+            background-color: #1a1a2e;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(108, 92, 231, 0.1) 0%, transparent 20%),
+                radial-gradient(circle at 90% 80%, rgba(253, 121, 168, 0.1) 0%, transparent 20%);
+            overflow-x: hidden;
+        }
+        
+        /* 粒子背景 */
+        #particles-js {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+        
+        /* 布局样式 */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* 导航栏样式 */
+        header {
+            background-color: rgba(26, 26, 46, 0.8);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 1px solid rgba(108, 92, 231, 0.3);
+        }
+        
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+        }
+        
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-decoration: none;
+            position: relative;
+            padding: 5px 10px;
+        }
+        
+        .logo::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--gradient);
+            transition: width 0.3s ease;
+        }
+        
+        .logo:hover::after {
+            width: 100%;
+        }
+        
+        .nav-links {
+            display: flex;
+            list-style: none;
+        }
+        
+        .nav-links li {
+            margin-left: 30px;
+            position: relative;
+        }
+        
+        .nav-links a {
+            text-decoration: none;
+            color: var(--light);
+            font-weight: 500;
+            transition: color 0.3s;
+            padding: 5px 0;
+        }
+        
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--gradient);
+            transition: width 0.3s ease;
+        }
+        
+        .nav-links a:hover {
+            color: var(--secondary);
+        }
+        
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+        
+        /* 英雄区域 */
+        .hero {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            position: relative;
+            padding-top: 80px;
+        }
+        
+        .hero-content {
+            max-width: 700px;
+            z-index: 2;
+        }
+        
+        .hero-title {
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: var(--neon-glow);
+            animation: pulse 2s infinite;
+        }
+        
+        .hero-subtitle {
+            font-size: 1.5rem;
+            margin-bottom: 30px;
+            color: var(--secondary);
+        }
+        
+        .hero-btn {
+            display: inline-block;
+            padding: 12px 30px;
+            background: var(--gradient);
+            color: white;
+            text-decoration: none;
+            border-radius: 30px;
+            font-weight: 500;
+            transition: all 0.3s;
+            box-shadow: 0 5px 15px rgba(108, 92, 231, 0.4);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(108, 92, 231, 0.6);
+        }
+        
+        .hero-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: 0.5s;
+        }
+        
+        .hero-btn:hover::before {
+            left: 100%;
+        }
+        
+        /* 博客内容区域 */
+        .blog-section {
+            padding: 100px 0;
+        }
+        
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 60px;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            position: relative;
+            display: inline-block;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: var(--gradient);
+            border-radius: 3px;
+        }
+        
+        .articles-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 30px;
+        }
+        
+        .article-card {
+            background: rgba(26, 26, 46, 0.6);
+            border-radius: 15px;
+            overflow: hidden;
+            transition: all 0.4s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(108, 92, 231, 0.2);
+            position: relative;
+            transform-style: preserve-3d;
+            perspective: 1000px;
+        }
+        
+        .article-card:hover {
+            transform: translateY(-10px) rotateX(5deg);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3), var(--neon-glow);
+            border-color: rgba(108, 92, 231, 0.5);
+        }
+        
+        .article-img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+        
+        .article-card:hover .article-img {
+            transform: scale(1.05);
+        }
+        
+        .article-content {
+            padding: 25px;
+        }
+        
+        .article-title {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+            color: var(--light);
+        }
+        
+        .article-meta {
+            color: var(--secondary);
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .article-meta span {
+            margin-right: 15px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .article-meta i {
+            margin-right: 5px;
+        }
+        
+        .article-excerpt {
+            margin-bottom: 20px;
+            color: #b2bec3;
+        }
+        
+        .read-more {
+            display: inline-flex;
+            align-items: center;
+            padding: 8px 20px;
+            background: transparent;
+            color: var(--secondary);
+            text-decoration: none;
+            border-radius: 30px;
+            font-weight: 500;
+            transition: all 0.3s;
+            border: 1px solid var(--secondary);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .read-more:hover {
+            color: var(--light);
+            border-color: var(--primary);
+        }
+        
+        .read-more::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: var(--gradient);
+            transition: 0.5s;
+            z-index: -1;
+        }
+        
+        .read-more:hover::before {
+            left: 0;
+        }
+        
+        /* 页脚 */
+        footer {
+            background: rgba(26, 26, 46, 0.9);
+            padding: 60px 0 30px;
+            border-top: 1px solid rgba(108, 92, 231, 0.3);
+        }
+        
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+        
+        .footer-section {
+            padding: 0 15px;
+        }
+        
+        .footer-title {
+            font-size: 1.3rem;
+            margin-bottom: 20px;
+            color: var(--secondary);
+            position: relative;
+            padding-bottom: 10px;
+        }
+        
+        .footer-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 50px;
+            height: 2px;
+            background: var(--gradient);
+        }
+        
+        .footer-links {
+            list-style: none;
+        }
+        
+        .footer-links li {
+            margin-bottom: 12px;
+        }
+        
+        .footer-links a {
+            text-decoration: none;
+            color: var(--light);
+            transition: color 0.3s;
+            display: inline-block;
+        }
+        
+        .footer-links a:hover {
+            color: var(--secondary);
+            transform: translateX(5px);
+        }
+        
+        .social-links {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .social-link {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(108, 92, 231, 0.1);
+            color: var(--light);
+            transition: all 0.3s;
+        }
+        
+        .social-link:hover {
+            background: var(--gradient);
+            transform: translateY(-3px);
+            box-shadow: var(--neon-glow);
+        }
+        
+        .copyright {
+            text-align: center;
+            padding-top: 30px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: #b2bec3;
+            font-size: 0.9rem;
+        }
+        
+        /* 动画效果 */
+        @keyframes pulse {
+            0% {
+                text-shadow: 0 0 10px rgba(108, 92, 231, 0.7),
+                            0 0 20px rgba(108, 92, 231, 0.5),
+                            0 0 30px rgba(108, 92, 231, 0.3);
+            }
+            50% {
+                text-shadow: 0 0 15px rgba(108, 92, 231, 0.8),
+                            0 0 25px rgba(108, 92, 231, 0.6),
+                            0 0 35px rgba(108, 92, 231, 0.4);
+            }
+            100% {
+                text-shadow: 0 0 10px rgba(108, 92, 231, 0.7),
+                            0 0 20px rgba(108, 92, 231, 0.5),
+                            0 0 30px rgba(108, 92, 231, 0.3);
+            }
+        }
+        
+        @keyframes float {
+            0% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
+            100% {
+                transform: translateY(0);
+            }
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 992px) {
+            .hero-title {
+                font-size: 2.8rem;
+            }
+            
+            .articles-grid {
+                grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .navbar {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .nav-links {
+                margin-top: 20px;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            .nav-links li {
+                margin: 0 10px 10px 10px;
+            }
+            
+            .hero-title {
+                font-size: 2.2rem;
+            }
+            
+            .hero-subtitle {
+                font-size: 1.2rem;
+            }
+            
+            .section-title {
+                font-size: 2rem;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .articles-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .hero-title {
+                font-size: 1.8rem;
+            }
+            
+            .footer-content {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        /* 滚动条样式 */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: rgba(26, 26, 46, 0.8);
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: var(--gradient);
+            border-radius: 4px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(135deg, #a29bfe, #00cec9);
+        }
+    </style>
+</head>
+<body>
+    <!-- 粒子背景 -->
+    <div id="particles-js"></div>
+
+    <!-- 导航栏 -->
+    <header>
+        <div class="container">
+            <nav class="navbar">
+                <a href="#" class="logo">炫光博客</a>
+                <ul class="nav-links">
+                    <li><a href="#">首页</a></li>
+                    <li><a href="#">技术</a></li>
+                    <li><a href="#">设计</a></li>
+                    <li><a href="#">创意</a></li>
+                    <li><a href="#">关于</a></li>
+                    <li><a href="#">联系</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- 英雄区域 -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <h1 class="hero-title">探索数字世界的无限可能</h1>
+                <p class="hero-subtitle">前沿技术 · 创意设计 · 深度思考</p>
+                <a href="#" class="hero-btn">开始阅读</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- 博客内容区域 -->
+    <section class="blog-section">
+        <div class="container">
+            <h2 class="section-title">最新文章</h2>
+            
+            <div class="articles-grid">
+                <!-- 文章卡片 1 -->
+                <article class="article-card">
+                    <img src="https://picsum.photos/600/400?random=1&blur=2" alt="文章图片" class="article-img">
+                    <div class="article-content">
+                        <h3 class="article-title">WebGL与Three.js创建3D交互体验</h3>
+                        <div class="article-meta">
+                            <span>2023-10-20</span>
+                            <span>技术</span>
+                            <span>8分钟阅读</span>
+                        </div>
+                        <p class="article-excerpt">
+                            探索如何使用WebGL和Three.js框架创建令人惊叹的3D网页交互体验，从基础概念到高级技巧。
+                        </p>
+                        <a href="#" class="read-more">阅读全文</a>
+                    </div>
+                </article>
+                
+                <!-- 文章卡片 2 -->
+                <article class="article-card">
+                    <img src="https://picsum.photos/600/400?random=2&blur=2" alt="文章图片" class="article-img">
+                    <div class="article-content">
+                        <h3 class="article-title">CSS Grid与Flexbox的现代布局技术</h3>
+                        <div class="article-meta">
+                            <span>2023-10-18</span>
+                            <span>前端</span>
+                            <span>6分钟阅读</span>
+                        </div>
+                        <p class="article-excerpt">
+                            深入了解CSS Grid和Flexbox布局系统，掌握创建响应式、灵活网页布局的最佳实践和技巧。
+                        </p>
+                        <a href="#" class="read-more">阅读全文</a>
+                    </div>
+                </article>
+                
+                <!-- 文章卡片 3 -->
+                <article class="article-card">
+                    <img src="https://picsum.photos/600/400?random=3&blur=2" alt="文章图片" class="article-img">
+                    <div class="article-content">
+                        <h3 class="article-title">人工智能在创意设计中的应用</h3>
+                        <div class="article-meta">
+                            <span>2023-10-15</span>
+                            <span>AI</span>
+                            <span>10分钟阅读</span>
+                        </div>
+                        <p class="article-excerpt">
+                            探索人工智能如何改变创意设计领域，从生成艺术到自动化设计工作流的最新发展和趋势。
+                        </p>
+                        <a href="#" class="read-more">阅读全文</a>
+                    </div>
+                </article>
+                
+                <!-- 文章卡片 4 -->
+                <article class="article-card">
+                    <img src="https://picsum.photos/600/400?random=4&blur=2" alt="文章图片" class="article-img">
+                    <div class="article-content">
+                        <h3 class="article-title">未来用户界面设计趋势预测</h3>
+                        <div class="article-meta">
+                            <span>2023-10-12</span>
+                            <span>设计</span>
+                            <span>7分钟阅读</span>
+                        </div>
+                        <p class="article-excerpt">
+                            分析未来五年用户界面设计的发展方向，包括沉浸式体验、语音交互和情感化设计等趋势。
+                        </p>
+                        <a href="#" class="read-more">阅读全文</a>
+                    </div>
+                </article>
+                
+                <!-- 文章卡片 5 -->
+                <article class="article-card">
+                    <img src="https://picsum.photos/600/400?random=5&blur=2" alt="文章图片" class="article-img">
+                    <div class="article-content">
+                        <h3 class="article-title">Web性能优化高级技巧</h3>
+                        <div class="article-meta">
+                            <span>2023-10-10</span>
+                            <span>性能</span>
+                            <span>9分钟阅读</span>
+                        </div>
+                        <p class="article-excerpt">
+                            深入了解现代Web性能优化的高级技巧，包括资源加载策略、渲染优化和缓存机制等。
+                        </p>
+                        <a href="#" class="read-more">阅读全文</a>
+                    </div>
+                </article>
+                
+                <!-- 文章卡片 6 -->
+                <article class="article-card">
+                    <img src="https://picsum.photos/600/400?random=6&blur=2" alt="文章图片" class="article-img">
+                    <div class="article-content">
+                        <h3 class="article-title">创意编码与生成艺术</h3>
+                        <div class="article-meta">
+                            <span>2023-10-08</span>
+                            <span>创意</span>
+                            <span>11分钟阅读</span>
+                        </div>
+                        <p class="article-excerpt">
+                            探索创意编码的世界，学习如何使用代码创建生成艺术和交互式视觉体验，释放你的创造力。
+                        </p>
+                        <a href="#" class="read-more">阅读全文</a>
+                    </div>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <!-- 页脚 -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3 class="footer-title">关于我们</h3>
+                    <p>炫光博客致力于分享前沿技术、创意设计和深度思考，帮助读者探索数字世界的无限可能。</p>
+                    <div class="social-links">
+                        <a href="#" class="social-link">𝕏</a>
+                        <a href="#" class="social-link">ƒ</a>
+                        <a href="#" class="social-link">in</a>
+                        <a href="#" class="social-link">Ⓖ</a>
+                    </div>
+                </div>
+                
+                <div class="footer-section">
+                    <h3 class="footer-title">快速链接</h3>
+                    <ul class="footer-links">
+                        <li><a href="#">首页</a></li>
+                        <li><a href="#">关于我们</a></li>
+                        <li><a href="#">服务</a></li>
+                        <li><a href="#">隐私政策</a></li>
+                        <li><a href="#">联系方式</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h3 class="footer-title">分类</h3>
+                    <ul class="footer-links">
+                        <li><a href="#">前端开发</a></li>
+                        <li><a href="#">UI/UX设计</a></li>
+                        <li><a href="#">人工智能</a></li>
+                        <li><a href="#">创意编码</a></li>
+                        <li><a href="#">技术趋势</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="copyright">
+                <p>&copy; 2023 炫光博客. 保留所有权利.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // 粒子背景效果
+        document.addEventListener('DOMContentLoaded', function() {
+            // 创建粒子背景
+            const particlesContainer = document.getElementById('particles-js');
+            const canvas = document.createElement('canvas');
+            particlesContainer.appendChild(canvas);
+            const ctx = canvas.getContext('2d');
+            
+            // 设置canvas尺寸
+            function setCanvasSize() {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+            }
+            
+            setCanvasSize();
+            window.addEventListener('resize', setCanvasSize);
+            
+            // 粒子系统
+            const particles = [];
+            const particleCount = 100;
+            const colors = ['#6c5ce7', '#00cec9', '#fd79a8', '#a29bfe'];
+            
+            class Particle {
+                constructor() {
+                    this.x = Math.random() * canvas.width;
+                    this.y = Math.random() * canvas.height;
+                    this.size = Math.random() * 3 + 1;
+                    this.speedX = Math.random() * 1 - 0.5;
+                    this.speedY = Math.random() * 1 - 0.5;
+                    this.color = colors[Math.floor(Math.random() * colors.length)];
+                }
+                
+                update() {
+                    this.x += this.speedX;
+                    this.y += this.speedY;
+                    
+                    if (this.x > canvas.width || this.x < 0) {
+                        this.speedX = -this.speedX;
+                    }
+                    if (this.y > canvas.height || this.y < 0) {
+                        this.speedY = -this.speedY;
+                    }
+                }
+                
+                draw() {
+                    ctx.fillStyle = this.color;
+                    ctx.beginPath();
+                    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                    ctx.fill();
+                    
+                    // 添加发光效果
+                    ctx.shadowBlur = 15;
+                    ctx.shadowColor = this.color;
+                }
+            }
+            
+            // 初始化粒子
+            function init() {
+                for (let i = 0; i < particleCount; i++) {
+                    particles.push(new Particle());
+                }
+            }
+            
+            // 连接相近的粒子
+            function connectParticles() {
+                for (let i = 0; i < particles.length; i++) {
+                    for (let j = i; j < particles.length; j++) {
+                        const dx = particles[i].x - particles[j].x;
+                        const dy = particles[i].y - particles[j].y;
+                        const distance = Math.sqrt(dx * dx + dy * dy);
+                        
+                        if (distance < 150) {
+                            ctx.beginPath();
+                            ctx.strokeStyle = `rgba(108, 92, 231, ${1 - distance/150})`;
+                            ctx.lineWidth = 0.5;
+                            ctx.moveTo(particles[i].x, particles[i].y);
+                            ctx.lineTo(particles[j].x, particles[j].y);
+                            ctx.stroke();
+                        }
+                    }
+                }
+            }
+            
+            // 动画循环
+            function animate() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                
+                for (let i = 0; i < particles.length; i++) {
+                    particles[i].update();
+                    particles[i].draw();
+                }
+                
+                connectParticles();
+                requestAnimationFrame(animate);
+            }
+            
+            init();
+            animate();
+            
+            // 文章卡片悬停效果增强
+            const articleCards = document.querySelectorAll('.article-card');
+            
+            articleCards.forEach(card => {
+                card.addEventListener('mousemove', function(e) {
+                    const rect = this.getBoundingClientRect();
+                    const x = e.clientX - rect.left;
+                    const y = e.clientY - rect.top;
+                    
+                    this.style.setProperty('--mouse-x', `${x}px`);
+                    this.style.setProperty('--mouse-y', `${y}px`);
+                });
+            });
+            
+            // 滚动动画
+            const observerOptions = {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            };
+            
+            const observer = new IntersectionObserver(function(entries) {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = 1;
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            }, observerOptions);
+            
+            // 观察所有文章卡片
+            articleCards.forEach(card => {
+                card.style.opacity = 0;
+                card.style.transform = 'translateY(50px)';
+                card.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+                observer.observe(card);
+            });
+        });
+    </script>
+</body>
+</html>
