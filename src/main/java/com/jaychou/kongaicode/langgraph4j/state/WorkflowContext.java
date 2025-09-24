@@ -1,12 +1,12 @@
 package com.jaychou.kongaicode.langgraph4j.state;
 
 import com.jaychou.kongaicode.ai.model.enums.CodeGenTypeEnum;
+import com.jaychou.kongaicode.langgraph4j.model.QualityResult;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.bsc.langgraph4j.prebuilt.MessagesState;
-
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -71,6 +71,10 @@ public class WorkflowContext implements Serializable {
      * 错误信息
      */
     private String errorMessage;
+    /**
+     * 质量检查结果
+     */
+    private QualityResult qualityResult;
 
     @Serial
     private static final long serialVersionUID = 1L;
