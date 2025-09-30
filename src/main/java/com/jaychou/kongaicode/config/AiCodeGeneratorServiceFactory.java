@@ -121,7 +121,7 @@ public class AiCodeGeneratorServiceFactory {
         return switch (codeGenType) {
 
 
-// Vue 项目生成使用推理模型
+            // Vue 项目生成使用推理模型
             case VUE_PROJECT -> AiServices.builder(AiCodeGeneratorService.class)
                     .streamingChatModel(reasoningStreamingChatModel)
                     .chatMemoryProvider(memoryId -> chatMemory)

@@ -31,5 +31,7 @@ build/
 ### CUSTOM ###
 src/main/resources/application-local.yml
 
+tmp
+
 ### VS Code ###
 .vscode/

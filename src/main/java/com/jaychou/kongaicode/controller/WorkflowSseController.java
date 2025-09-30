@@ -34,14 +34,15 @@ public class WorkflowSseController {
         log.info("收到 Flux 工作流执行请求: {}", prompt);
         return new CodeGenWorkflow().executeWorkflowWithFlux(prompt);
     }
-        /**
-         * SSE 流式执行工作流
-         */
-        @GetMapping(value = "/execute-sse", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
-        public SseEmitter executeWorkflowWithSse(@RequestParam String prompt) {
-            log.info("收到 SSE 工作流执行请求: {}", prompt);
-            return new CodeGenWorkflow().executeWorkflowWithSse(prompt);
-        }
+
+    /**
+     * SSE 流式执行工作流
+     */
+    @GetMapping(value = "/execute-sse", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+    public SseEmitter executeWorkflowWithSse(@RequestParam String prompt) {
+        log.info("收到 SSE 工作流执行请求: {}", prompt);
+        return new CodeGenWorkflow().executeWorkflowWithSse(prompt);
+    }
 
 
 }
