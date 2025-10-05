@@ -1,7 +1,9 @@
 package com.jaychou.kongaicode.config;
 
 import com.jaychou.kongaicode.langgraph4j.tools.ImageSearchTool;
+import com.jaychou.kongaicode.langgraph4j.tools.LogoGeneratorTool;
 import com.jaychou.kongaicode.langgraph4j.tools.MermaidDiagramTool;
+import com.jaychou.kongaicode.langgraph4j.tools.UndrawIllustrationTool;
 import com.jaychou.kongaicode.service.ImageCollectionService;
 import dev.langchain4j.model.chat.ChatModel;
 import dev.langchain4j.service.AiServices;
@@ -14,8 +16,9 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class ImageCollectionServiceFactory {
 
-    @Resource
-    private ChatModel chatModel;
+@Resource(name = "openAiChatModel")
+private ChatModel chatModel;
+
 
     @Resource
     private ImageSearchTool imageSearchTool;

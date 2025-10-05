@@ -1,7 +1,8 @@
 package com.jaychou.kongaicode.langgraph4j.node;
 
-import com.jaychou.kongaicode.ai.AiCodeGenTypeRoutingService;
+
 import com.jaychou.kongaicode.ai.model.enums.CodeGenTypeEnum;
+import com.jaychou.kongaicode.config.AiCodeGenTypeRoutingServiceFactory;
 import com.jaychou.kongaicode.langgraph4j.state.WorkflowContext;
 import com.jaychou.kongaicode.utils.SpringContextUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -21,9 +22,9 @@ public class RouterNode {
             CodeGenTypeEnum generationType;
             try {
                 // 获取AI路由服务
-                AiCodeGenTypeRoutingService routingService = SpringContextUtil.getBean(AiCodeGenTypeRoutingService.class);
+                AiCodeGenTypeRoutingServiceFactory routingServiceFactory = SpringContextUtil.getBean(AiCodeGenTypeRoutingServiceFactory.class);
                 // 根据原始提示词进行智能路由
-                generationType = routingService.routeCodeGenType(context.getOriginalPrompt());
+                generationType = routingServiceFactory.createAiCodeGenTypeRoutingService().routeCodeGenType(context.getOriginalPrompt());
                 log.info("AI智能路由完成，选择类型: {} ({})", generationType.getValue(), generationType.getText());
             } catch (Exception e) {
                 log.error("AI智能路由失败，使用默认HTML类型: {}", e.getMessage());

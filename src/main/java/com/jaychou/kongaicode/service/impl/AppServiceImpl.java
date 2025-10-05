@@ -10,6 +10,7 @@ import com.jaychou.kongaicode.ai.core.AiCodeGeneratorFacade;
 import com.jaychou.kongaicode.ai.core.builder.VueProjectBuilder;
 import com.jaychou.kongaicode.ai.core.handler.StreamHandlerExecutor;
 import com.jaychou.kongaicode.ai.model.enums.CodeGenTypeEnum;
+import com.jaychou.kongaicode.config.AiCodeGenTypeRoutingServiceFactory;
 import com.jaychou.kongaicode.constant.AppConstant;
 import com.jaychou.kongaicode.exception.BusinessException;
 import com.jaychou.kongaicode.exception.ErrorCode;
@@ -66,13 +67,14 @@ public class AppServiceImpl extends ServiceImpl<AppMapper, App> implements AppSe
     @Resource
     private ScreenshotService screenshotService;
     @Resource
-    private AiCodeGenTypeRoutingService aiCodeGenTypeRoutingService;
+    private AiCodeGenTypeRoutingServiceFactory aiCodeGenTypeRoutingServiceFactory;
 
     @Override
     public Long createApp(AppAddRequest appAddRequest, User loginUser) {
         // 参数校验
         String initPrompt = appAddRequest.getInitPrompt();
         ThrowUtils.throwIf(StrUtil.isBlank(initPrompt), ErrorCode.PARAMS_ERROR, "初始化 prompt 不能为空");
+        AiCodeGenTypeRoutingService routingService = aiCodeGenTypeRoutingServiceFactory.createAiCodeGenTypeRoutingService();
         // 构造入库对象
         App app = new App();
         BeanUtil.copyProperties(appAddRequest, app);
@@ -80,7 +82,7 @@ public class AppServiceImpl extends ServiceImpl<AppMapper, App> implements AppSe
         // 应用名称暂时为 initPrompt 前 12 位
         app.setAppName(initPrompt.substring(0, Math.min(initPrompt.length(), 12)));
         // 使用 AI 智能选择代码生成类型
-        CodeGenTypeEnum selectedCodeGenType = aiCodeGenTypeRoutingService.routeCodeGenType(initPrompt);
+        CodeGenTypeEnum selectedCodeGenType = routingService.routeCodeGenType(initPrompt);
         app.setCodeGenType(selectedCodeGenType.getValue());
         // 插入数据库
         boolean result = this.save(app);

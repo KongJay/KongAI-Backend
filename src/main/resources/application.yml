@@ -17,6 +17,7 @@ spring:
       ttl: 3600
       #password: 123456
       database: 0
+      ttl: 3600
   session:
     store-type: redis
     timeout: 2592000
